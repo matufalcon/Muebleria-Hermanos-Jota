@@ -4,38 +4,32 @@ import { jwtDecode } from "jwt-decode";
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('authToken') || null);
-  const [isAuthenticated, setIsAuthenticated] = useState(!!token);
+
+  // 'user' se deriva del token
+  // 'isAuthenticated' se deriva de si el token existe o no
+  const user = token ? (() => {
+    try { return jwtDecode(token) }
+    catch { return null; }
+  })() : null;
+
+  const isAuthenticated = !!user;
 
   useEffect(() => {
     if (token) {
-        try {
-            const decodedUser = jwtDecode(token);
-            setUser(decodedUser);
-            setIsAuthenticated(true);
-        } catch (error) {
-            console.error('Token inválido, borrando...');
-            localStorage.removeItem('authToken');
-            setToken(null);
-        }
+      localStorage.setItem('authToken', token);
+    }else{
+      localStorage.removeItem('authToken');
     }
   }, [token]);
 
   const login = (jwtToken) => {
-    localStorage.setItem('authToken', jwtToken);
     setToken(jwtToken);
-
-    const decodedUser = jwtDecode(jwtToken);
-    setUser(decodedUser);
-    setIsAuthenticated(true);
   };
 
   const logout = () => {
     localStorage.removeItem('authToken');
     setToken(null);
-    setUser(null);
-    setIsAuthenticated(false);
   };
 
   return (

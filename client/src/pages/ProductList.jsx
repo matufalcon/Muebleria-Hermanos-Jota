@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { CartContext } from '../context/CartContext';
 import ProductCard from '../components/ProductCard';
 import '../ProductStyles.css';
 import { useProducts } from '../hooks/useProducts';
 
-function ProductList({ limit, handleAddToCart }) {
+function ProductList({ limit }) {
   // Hook personalizado maneja toda la lógica de fetch
   const { productos, loading, error } = useProducts();
-
+  const { addItem } = useContext(CartContext);
   const productosAmostrar = typeof limit === 'number' && limit > 0 ? productos.slice(0, limit) : productos;
   const isHighlighted = typeof limit === 'number' && limit > 0;
   const cardButtonText = isHighlighted ? 'Ver Detalles' : 'Añadir al carrito';
@@ -28,7 +29,7 @@ function ProductList({ limit, handleAddToCart }) {
                 key={producto.id}
                 producto={producto}
                 buttonText={cardButtonText}
-                buttonAction={handleAddToCart}
+                buttonAction={()=> addItem(producto)}
                 useNavigation={useNavigation}
               />
             ))}
@@ -45,7 +46,7 @@ function ProductList({ limit, handleAddToCart }) {
                 key={producto.id}
                 producto={producto}
                 buttonText={cardButtonText}
-                buttonAction={handleAddToCart}
+                buttonAction={()=> addItem(producto)}
                 useNavigation={useNavigation}
               />
             ))}

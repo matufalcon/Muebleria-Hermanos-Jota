@@ -9,7 +9,6 @@ import ContactForm from './pages/ContactForm';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './components/Cart';
 import { CartContext } from './context/CartContext';
-import { AuthContext } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register'
 import './App.css';
@@ -18,9 +17,7 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { user, isAuthenticated, logout } = useContext(AuthContext);
-  const { cart, addItem, updateQuantity, removeItem, clearCart } =
-    useContext(CartContext);
+  const { cartCount } = useContext(CartContext);
 
   const toggleSidebar = () => setIsSidebarOpen((o) => !o);
 
@@ -28,8 +25,6 @@ function App() {
     setIsSidebarOpen(false);
     navigate(path);
   };
-
-  const cartCount = cart.reduce((acc, it) => acc + it.cantidad, 0);
 
   return (
     <>
@@ -50,19 +45,19 @@ function App() {
             element={
               <>
                 <HeroBanner navigateTo={navigateTo} />
-                <ProductList handleAddToCart={addItem} limit={4} />
+                <ProductList limit={4} />
               </>
             }
           />
 
           <Route
             path="/products"
-            element={<ProductList handleAddToCart={addItem} />}
+            element={<ProductList />}
           />
 
           <Route
             path="/products/:id"
-            element={<ProductDetail onAddToCart={addItem} />}
+            element={<ProductDetail />}
           />
 
           <Route path="/contact" element={<ContactForm />} />

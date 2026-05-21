@@ -1,0 +1,326 @@
+.hj-nav {
+    background: var(--color-fondo);
+    border-bottom: 1px solid rgba(160, 82, 45, 0.2);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    box-sizing: border-box;
+}
+
+.hj-nav__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.hj-nav__logo-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--color-principal);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hj-nav__logo-mark span {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--color-fondo);
+    font-weight: 500;
+    line-height: 1;
+}
+
+.hj-nav__brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--color-principal);
+    letter-spacing: 0.02rem;
+    white-space: nowrap;
+}
+
+.hj-nav__links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 60px;
+}
+
+.hj-nav__links li{
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.hj-nav__links a{
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: uppercase; /*mayusculas*/
+    color: var(--color-principal);
+    text-decoration: none;
+    position: relative;
+    opacity: 0.65;
+    transition: opacity 0.2s;
+}
+
+.hj-nav__links a::after{
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--color-detalles);
+    transition: width 0.25s ease;
+}
+
+.hj-nav__links a:hover {
+    opacity: 1;
+}
+
+.hj-nav__links a:hover::after,
+.hj-nav__links a.active::after {
+  width: calc(100% - 2rem);
+}
+
+.hj-nav__links a.active {
+    opacity: 1;
+    font-weight: 500;
+}
+
+.hj-nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.hj-nav__icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--color-principal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    text-decoration: none;
+}
+
+.hj-nav__icon-btn:hover {
+    background: rgba(160, 82, 45, 0.08);
+}
+
+.hj-nav__icon-btn svg{
+    width: 25px;
+    height: 25px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.hj-nav__badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 16px;
+    height: 16px;
+    background: var(--color-detalles);
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 500;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    line-height: 1;
+}
+
+.hj-nav__divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(160, 82, 45, 0.2);
+    margin: 0 0.25rem;
+}
+
+.hj-nav__user-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.75rem 0.3rem 0.3rem;
+    border-radius: 20px;
+    border: 1px solid rgba(160, 82, 45, 0.25);
+    cursor: default;
+    background: transparent;
+}
+
+.hj-nav__avatar {
+    width: 24px;
+    height: 24px;
+    background: var(--color-principal);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--color-fondo);
+    font-family: 'DM Sans', sans-serif;
+    flex-shrink: 0;
+}
+
+.hj-nav__user-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--color-principal);
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.hj-nav__logout {
+    border: none;
+    background: none;
+    padding: 0;
+    margin-left: 0.15rem;
+    cursor: pointer;
+    color: rgba(160, 82, 45, 0.45);
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+    line-height: 1;
+}
+
+.hj-nav__logout:hover {
+    color: var(--color-principal);
+}
+
+.hj-nav__logout svg {
+    width: 13px;
+    height: 13px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.hj-nav__auth {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.hj-nav__btn-ghost {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--color-principal);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    transition: background 0.2s;
+    opacity: 0.7;
+}
+
+.hj-nav__btn-ghost:hover {
+    background: rgba(160, 82, 45, 0.08);
+    opacity: 1;
+}
+
+.hj-nav__btn-solid {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--color-fondo);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    padding: 0.3rem 0.9rem;
+    background: var(--color-principal);
+    border-radius: 6px;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+}
+
+.hj-nav__btn-solid:hover {
+    background: #8b4423;  
+    transform: translateY(-1px);
+}
+
+/* Hamburger — mobile */
+.hj-nav__hamburger {
+    display: none;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--color-principal);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.hj-nav__hamburger:hover {
+    background: rgba(160, 82, 45, 0.08);
+}
+
+.hj-nav__hamburger svg {
+    width: 22px;
+    height: 22px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+}
+
+@media (max-width: 768px) {
+  .hj-nav {
+    padding: 0 1rem;
+  }
+
+  .hj-nav__links {
+    display: none;
+  }
+
+  .hj-nav__hamburger {
+    display: flex;
+  }
+
+  .hj-nav__brand {
+    font-size: 0.95rem;
+  }
+
+  .hj-nav__btn-ghost {
+    display: none;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -8,7 +8,6 @@ import Footer from './components/Footer';
 import ContactForm from './pages/ContactForm';
 import ProductDetail from './pages/ProductDetail';
 import Cart from './components/Cart';
-import { CartContext } from './context/CartContext';
 import Login from './pages/Login';
 import Register from './pages/Register'
 import CrearProducto from './pages/CrearProducto';
@@ -19,8 +18,6 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { cartCount } = useContext(CartContext);
-
   const toggleSidebar = () => setIsSidebarOpen((o) => !o);
 
   const navigateTo = (path) => {
@@ -30,12 +27,7 @@ function App() {
 
   return (
     <>
-      <Navbar
-        toggleSidebar={toggleSidebar}
-        navigateTo={navigateTo}
-        cartItemCount={cartCount}
-        onCartClick={() => navigateTo('cart')}
-      />
+      <Navbar toggleSidebar={toggleSidebar} />
 
       <Sidebar isOpen={isSidebarOpen} navigateTo={navigateTo} />
 

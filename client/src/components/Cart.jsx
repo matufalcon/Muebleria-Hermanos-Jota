@@ -1,17 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CartContext } from '../context/CartContext';
-import { AuthContext } from '../context/AuthContext';
+import { useCart } from '../hooks/useCart';
+import { useAuth } from '../hooks/useAuth';
 
 function Cart() {
   const navigate = useNavigate();
-  const { cart, removeItem, incrementItem, decrementItem, clearCart } = useContext(CartContext);
-  const { isAuthenticated } = useContext(AuthContext);
+  const { cart, removeItem, incrementItem, decrementItem, clearCart, cartTotal } = useCart();
+  const { isAuthenticated } = useAuth();
 
   const formatPrice = (n) => Number(n).toLocaleString('es-AR');
-
-  // Ensure robust calculation even if data is missing
-  const total = cart.reduce((acc, it) => acc + (it.precio || 0) * (it.cantidad || 1), 0);
 
   const handleCheckout = () => {
     if (!isAuthenticated) {
@@ -78,7 +75,7 @@ function Cart() {
       <aside className="carrito__resumen">
         <div className="carrito__total">
           <span>Total</span>
-          <strong>${formatPrice(total)}</strong>
+          <strong>${formatPrice(cartTotal)}</strong>
         </div>
 
         <div className="carrito__botones">

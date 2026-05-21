@@ -1,16 +1,16 @@
-import React, { useContext } from "react";
+import React from "react";
 import '../ProductStyles.css';
 import { useNavigate, useParams } from "react-router-dom";
 import { useProduct } from '../hooks/useProducts';
 import { useFormattedPrice } from '../hooks/useProductUtils';
-import { CartContext } from "../context/CartContext";
+import { useCart } from "../hooks/useCart";
 
 function ProductDetail() {
 
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { addItem } = useContext(CartContext);
+  const { addItem } = useCart();
 
   // Hook personalizado maneja toda la lógica de fetch
   const { producto, loading, error } = useProduct(id);

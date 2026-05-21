@@ -11,6 +11,8 @@ import Cart from './components/Cart';
 import { CartContext } from './context/CartContext';
 import Login from './pages/Login';
 import Register from './pages/Register'
+import CrearProducto from './pages/CrearProducto';
+import PrivateRoute from './components/PrivateRoute'
 import './App.css';
 
 function App() {
@@ -66,8 +68,18 @@ function App() {
             path="/cart"
             element={<Cart />}
           />
+          
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
+          <Route 
+            path="/crear-producto"
+            element={
+              <PrivateRoute>
+                <CrearProducto />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </main>
 

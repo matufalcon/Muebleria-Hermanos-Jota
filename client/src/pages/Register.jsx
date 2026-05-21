@@ -1,26 +1,20 @@
-import React, { useState, useContext } from "react";
+import React from "react";
+import { useAuth } from "../hooks/useAuth";
+import { useForm } from "../hooks/useForm";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext"; 
 import "./Auth.css";
 
+const API_BASE = process.env.REACT_APP_API_URL || '';
+
 function Register() {
-  const [formData, setFormData] = useState({
+  const {formData, error, setError, loading, setLoading, handleChange} = useForm({
     nombre: "",
     email: "",
     password: ""
-  });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  })
   
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth();
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault(); 
@@ -28,7 +22,8 @@ function Register() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3001/api/auth/register", {
+      // Paso 1: registrar
+      const response = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -38,31 +33,35 @@ function Register() {
 
       const data = await response.json();
 
-      if (response.ok) {
-        alert("Usuario registrado exitosamente");
-        
-        const loginResponse = await fetch("http://localhost:3001/api/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password
-          })
-        });
-
-        const loginData = await loginResponse.json();
-        
-        if (loginResponse.ok) {
-          login(loginData.token);
-          navigate("/"); 
-        }
-      } else {
-        setError(data.error || "Error al registrar usuario");
+      if(!response.ok){
+        setError(data.error || 'Error al registrar usuario');
+        return;
       }
-    } catch (error) {
-      console.error("Error:", error);
+      // if (response.ok) {
+      //   alert("Usuario registrado exitosamente");
+      
+      // Paso 2: login automático después del registro
+      const loginResponse = await fetch(`${API_BASE}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        })
+      });
+
+      const loginData = await loginResponse.json();
+      
+      if (loginResponse.ok) {
+        login(loginData.token);
+        navigate("/"); 
+      } else {
+        // El registro funcionó pero el login automático falló
+        navigate("/login")
+      }
+    } catch {
       setError("Error de conexión con el servidor");
     } finally {
       setLoading(false);
@@ -98,7 +97,7 @@ function Register() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="tu@email.com"
+              placeholder="ejemplo@email.com"
               required
             />
           </div>

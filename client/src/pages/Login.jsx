@@ -1,25 +1,18 @@
-import React, { useState, useContext } from "react";
+import React from "react";
+import { useAuth } from "../hooks/useAuth";
+import { useForm } from "../hooks/useForm";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext"; 
 import "./Auth.css";
 
+const API_BASE = process.env.REACT_APP_API_URL || '';
+
 function Login() {
-  const [formData, setFormData] = useState({
+  const { login } = useAuth();
+  const {formData, error, setError, loading, setLoading, handleChange} = useForm({
     email: "",
     password: ""
-  });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  
-  const { login } = useContext(AuthContext);
+  });  
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault(); 
@@ -27,7 +20,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3001/api/auth/login", {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -43,8 +36,7 @@ function Login() {
       } else {
         setError(data.error || "Credenciales inválidas");
       }
-    } catch (error) {
-      console.error("Error:", error);
+    } catch {
       setError("Error de conexión con el servidor");
     } finally {
       setLoading(false);
@@ -67,7 +59,7 @@ function Login() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="tu@email.com"
+              placeholder="ejemplo@email.com"
               required
             />
           </div>

@@ -29,7 +29,7 @@ function App() {
     <>
       <Navbar toggleSidebar={toggleSidebar} />
 
-      <Sidebar isOpen={isSidebarOpen} navigateTo={navigateTo} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       <main>
         <Routes>

@@ -373,6 +373,48 @@ textarea.input {
     transform: scale(1.05);
 }
 
+/* --- TOASTS --- */
+.toast-container {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 999;
+}
+
+.toast {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.75rem 1.25rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  animation: toast-in 0.25s ease;
+  max-width: 320px;
+}
+
+.toast--success {
+  background: #8b3a1e;
+  color: #f5e0c8;
+}
+
+.toast--error {
+  background: #7a1e1e;
+  color: #f5d0d0;
+}
+
+.toast--info {
+  background: #3a5e8b;
+  color: #d0e0f5;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* --- MEDIA QUERIES --- */
 @media (max-width: 1024px) {
     .hero__content { max-width: 65%; }

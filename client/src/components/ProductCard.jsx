@@ -1,44 +1,45 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormattedPrice } from '../hooks/useProductUtils';
+import '../ProductStyles.css'
 
-function ProductCard({ producto, buttonText, buttonAction, useNavigation = false }) {
+function ProductCard({ producto, buttonAction }) {
   const navigate = useNavigate();
- 
-  // Hook para formatear precio 
   const precioFormateado = useFormattedPrice(producto.precio);
 
-   const handleCardClick = () => {
-    if (useNavigation) {
-      navigate(`/products/${producto.id}`);
-    }
-  };
+  const goToDetail = () => navigate(`/products/${producto._id || producto.id}`);
 
-  const handleButtonClick = (e) => {
+  const handleAddToCart = (e) => {
     e.stopPropagation();
-
-    if (useNavigation) {
-      console.log('➡️ Navigating to product detail');
-      navigate(`/products/${producto.id}`);
-    } else {
-      buttonAction?.(producto);
-    }
+    buttonAction?.(producto);
   };
 
   return (
-    <article className="card" onClick={handleCardClick} role="button" tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && handleCardClick()}>
-      <h2>{producto.nombre}</h2>
-      <img src={producto.imagen} alt={producto.nombre} loading="lazy" />
-      <p className="precio">${precioFormateado}</p>
+    <article className="card">
+      <div className="card__header">
+        <span>{producto.nombre}</span>
+      </div>
 
-      <button
-        type="button"
-        className="btn-detalle"
-        onClick={handleButtonClick}
-      >
-        {buttonText}
-      </button>
+      <div className="card__img-area">
+        <img src={producto.imagen} alt={producto.nombre} loading="lazy" />
+      </div>
+
+      <div className="card__body">
+        <div className="card__price-block">
+          <div className="card__price-label">precio</div>
+          <div className="card__price-value">${precioFormateado}</div>
+        </div>
+
+        <div className="card__actions">
+          <button type="button" className="btn-detalle" onClick={goToDetail}>
+            Ver detalles
+          </button>
+          <button type="button" className="btn-carrito" onClick={handleAddToCart}>
+            Añadir a carrito
+          </button>
+        </div>
+
+      </div>
     </article>
   );
 }

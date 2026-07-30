@@ -47,10 +47,10 @@ function Footer() {
           <div className="footer__column">
             <h4 className="cat__footer">Seguinos</h4>
             <div className="social__links">
-              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                 <i className="fab fa-instagram"></i>
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <a href="https://wa.me/5491100000000" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
                 <i className="fab fa-whatsapp"></i>
               </a>
             </div>

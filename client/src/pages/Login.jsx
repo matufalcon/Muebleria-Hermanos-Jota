@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useForm } from "../hooks/useForm";
+import { useToast } from '../hooks/useToast';
 import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
 
@@ -13,6 +14,7 @@ function Login() {
     password: ""
   });  
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); 
@@ -32,6 +34,7 @@ function Login() {
 
       if (response.ok) {
         login(data.token);
+        showToast(`¡Bienvenido de vuelta, ${data.nombre || 'usuario'}!`);
         navigate("/"); 
       } else {
         setError(data.error || "Credenciales inválidas");
@@ -59,7 +62,7 @@ function Login() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="ejemplo@email.com"
+              placeholder="Ej: maria@email.com"
               required
             />
           </div>
@@ -72,7 +75,7 @@ function Login() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="••••••"
+              placeholder="Tu contraseña"
               required
             />
           </div>

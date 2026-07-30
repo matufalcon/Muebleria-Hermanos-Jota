@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useForm } from "../hooks/useForm";
+import { useToast } from '../hooks/useToast';
 import { Link, useNavigate } from "react-router-dom";
 import "./Auth.css";
 
@@ -10,15 +11,28 @@ function Register() {
   const {formData, error, setError, loading, setLoading, handleChange} = useForm({
     nombre: "",
     email: "",
-    password: ""
+    password: "",
+    confirmPassword: ""
   })
   
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); 
     setError("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -28,7 +42,11 @@ function Register() {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          email: formData.email,
+          password: formData.password
+        })
       });
 
       const data = await response.json();
@@ -37,8 +55,6 @@ function Register() {
         setError(data.error || 'Error al registrar usuario');
         return;
       }
-      // if (response.ok) {
-      //   alert("Usuario registrado exitosamente");
       
       // Paso 2: login automático después del registro
       const loginResponse = await fetch(`${API_BASE}/api/auth/login`, {
@@ -56,6 +72,7 @@ function Register() {
       
       if (loginResponse.ok) {
         login(loginData.token);
+        showToast(`¡Cuenta creada! Bienvenido, ${formData.nombre}!`);
         navigate("/"); 
       } else {
         // El registro funcionó pero el login automático falló
@@ -73,7 +90,7 @@ function Register() {
       <div className="auth-box">
         <h2>Crear Cuenta</h2>
 
-        {error && <div style={{ color: "red", marginBottom: "10px" }}>{error}</div>}
+        {error && <div style={{ color: "#f5c8a8", marginBottom: "10px" }}>{error}</div>}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="auth-input__wrapper">
@@ -84,7 +101,7 @@ function Register() {
               name="nombre"
               value={formData.nombre}
               onChange={handleChange}
-              placeholder="Tu nombre"
+              placeholder="Ej: María García"
               required
             />
           </div>
@@ -97,7 +114,7 @@ function Register() {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="ejemplo@email.com"
+              placeholder="Ej: maria@email.com"
               required
             />
           </div>
@@ -110,7 +127,20 @@ function Register() {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="••••••"
+              placeholder="Mínimo 6 caracteres"
+              required
+            />
+          </div>
+
+          <div className="auth-input__wrapper">
+            <label className="auth-input__label">Confirmar contraseña</label>
+            <input
+              className="auth-input__field"
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Repetí tu contraseña"
               required
             />
           </div>

@@ -2,11 +2,13 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useCart } from '../hooks/useCart';
+import { useToast } from '../hooks/useToast';
 import './Navbar.css';
 
 function Navbar({ toggleSidebar }) {
   const { user, isAuthenticated, logout } = useAuth();
   const { cartCount } = useCart();
+  const { showToast } = useToast();
 
   // Iniciales del usuario para el avatar
   const initials = user?.nombre
@@ -16,6 +18,11 @@ function Navbar({ toggleSidebar }) {
     : 'U';
 
   const displayName = user?.nombre || user?.email || 'Usuario';
+
+  const handleLogout = () => {
+    logout();
+    showToast('Sesión cerrada correctamente', 'info');
+  };
 
   return (
     <header>
@@ -63,7 +70,7 @@ function Navbar({ toggleSidebar }) {
               <span className="hj-nav__user-name">{displayName}</span>
               <button
                 className="hj-nav__logout"
-                onClick={logout}
+                onClick={handleLogout}
                 title="Cerrar sesión"
                 aria-label="Cerrar sesión"
               >

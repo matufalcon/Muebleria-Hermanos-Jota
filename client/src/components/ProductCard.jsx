@@ -1,17 +1,20 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormattedPrice } from '../hooks/useProductUtils';
+import { useToast } from '../hooks/useToast';
 import '../ProductStyles.css'
 
 function ProductCard({ producto, buttonAction }) {
   const navigate = useNavigate();
   const precioFormateado = useFormattedPrice(producto.precio);
+  const { showToast } = useToast();
 
   const goToDetail = () => navigate(`/products/${producto._id || producto.id}`);
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
     buttonAction?.(producto);
+    showToast(`${producto.nombre} agregado al carrito`);
   };
 
   return (

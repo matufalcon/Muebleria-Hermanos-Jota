@@ -13,7 +13,7 @@ const app = express();
 const corsOptions = {
   origin: [
     'http://localhost:3000',
-    'https://muebleria-hermanos-jota-app.vercel.app' 
+    'https://muebleria-hermanos-jota-api.vercel.app' 
   ],
   credentials: true,
   optionsSuccessStatus: 200

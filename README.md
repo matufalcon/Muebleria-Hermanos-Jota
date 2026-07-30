@@ -1,94 +1,144 @@
-# Muebleria-Hermanos-Jota
+# Mueblería Hermanos Jota
 
-Este proyecto es el desarrollo de un sitio web de **e-commerce** para una mueblería artesanal, como parte del trabajo práctico final de los **Sprints 7 y 8 - NEXUS**.
+E-commerce de mueblería artesanal desarrollado con el stack MERN. Este repositorio es un **refactor personal** del [proyecto grupal original](https://github.com/Corcholog/Muebleria-Hermanos-Jota) realizado durante el curso de desarrollo FullStack - ITBA 2025.
 
-## Integrantes
-- Mongelós Ramiro
-- Castagnino Lucia
-- Loguercio Giorgio Ivan
-- Leiva Falcón Matías
-- Orue Ramiro Agustin
+El objetivo fue reescribir y mejorar el frontend en profundidad: corregir bugs críticos, aplicar patrones de React modernos y rediseñar la interfaz manteniendo la identidad visual de la marca.
 
 ---
 
-## 🚀 Enlaces a sitios desplegados
+## ¿Qué se mejoró respecto al original?
 
-Puedes acceder a las versiones desplegadas del proyecto en los siguientes enlaces:
+El proyecto original tenía varios problemas que se identificaron y corrigieron:
 
-* **Frontend (Cliente):** [https://muebleria-hermanos-jota-sprint7-8.vercel.app/](https://muebleria-hermanos-jota-sprint7-8.vercel.app)
-* **Backend (Servidor):** [https://muebleria-hermanos-jota-e3y4.onrender.com](https://muebleria-hermanos-jota-e3y4.onrender.com)
+**Bugs funcionales**
+- El carrito se vaciaba al recargar la página (no había persistencia)
+- El estado de autenticación tenía tres variables independientes que podían quedar en valores inconsistentes, causando fallas intermitentes en el login
+- Componentes recibían funciones del carrito como props desde `App.jsx` cuando ya existía un contexto para eso (prop drilling innecesario)
+- `CrearProducto.jsx` tenía la URL del fetch vacía y llamaba una función inexistente, por lo que nunca funcionó
+
+**Arquitectura**
+- Se eliminó el prop drilling de `App.jsx`: los componentes ahora consumen `CartContext` y `AuthContext` directamente
+- El `AuthContext` se simplificó a un único estado (`token`), del cual `user` e `isAuthenticated` se derivan, haciendo imposible los estados inconsistentes
+- Se agregó persistencia del carrito en `localStorage` con inicialización lazy y sincronización automática via `useEffect`
+
+**Custom hooks**
+- `useAuth` — acceso centralizado al contexto de autenticación
+- `useCart` — acceso centralizado al contexto del carrito
+- `useForm` — manejo genérico de formularios (estado, errores, loading, reset)
+- `useToast` — sistema de notificaciones visuales
+- `useProducts` / `useProduct` — fetch de productos con AbortController
+- `useProductUtils` / `useFormattedPrice` — formateo y utilidades de productos
+
+**UX**
+- Toasts de feedback al iniciar sesión, cerrar sesión, registrarse y agregar productos al carrito
+- El carrito persiste entre recargas y sesiones
+- Validación de contraseñas en el registro (confirmación + longitud mínima)
+- Rutas protegidas con `PrivateRoute` (la ruta de administración requiere autenticación)
+- Redirección automática al login cuando se intenta acceder a rutas protegidas
+
+**Interfaz**
+- Navbar rediseñado: compacto (60px), tipografía DM Sans, indicador de ruta activa con línea dorada, badge del carrito, estado de usuario autenticado con iniciales
+- Sidebar rediseñado: overlay para cerrar, iconos SVG, link activo, acciones de auth integradas
+- Cards de producto unificadas con header, bloque de precio destacado y dos acciones claras
+- Carrito con layout limpio, controles de cantidad y resumen de compra
+- Paleta y tipografía consistentes en toda la app (`Playfair Display` para títulos, `DM Sans` para cuerpo)
 
 ---
 
-## 🏗️ Descripción de la arquitectura
+## Stack tecnológico
 
-La aplicación está construida con una arquitectura **cliente-servidor** (MERN Stack):
+**Frontend**
+- React 18
+- React Router v6
+- Context API + custom hooks
+- CSS modular (sin frameworks de UI)
 
-### Backend (API REST)
-- **Tecnologías**: Node.js, Express, MongoDB.
-- **Funcionalidad**: Manejo de rutas protegidas, autenticación JWT, operaciones CRUD para productos, y middleware de logging.
-- **Despliegue**: Render.
-
-### Frontend (SPA)
-- **Tecnologías**: React, CSS (diseño responsivo y personalizado).
-- **Funcionalidad**: Consumo de API, manejo de estado global (Context API para Auth y Carrito), navegación con React Router, y componentes reutilizables.
-- **Despliegue**: Vercel.
+**Backend**
+- Node.js + Express
+- MongoDB + Mongoose
+- JWT para autenticación
+- Arquitectura en capas: routes → controllers → repositories → schemas
 
 ---
 
-## 📖 Instrucciones de uso
+## Estructura del proyecto
 
-### Pre-requisitos
-- Node.js instalado (v14 o superior).
-- Una base de datos MongoDB (local o Atlas).
+```
+├── backend/
+│   ├── server.js
+│   └── src/
+│       ├── controllers/
+│       ├── middlewares/
+│       ├── persistencia/
+│       │   ├── models/
+│       │   ├── repositories/
+│       │   └── schemas/
+│       └── routes/
+└── client/
+    └── src/
+        ├── components/      # Navbar, Sidebar, Cart, ProductCard, PrivateRoute
+        ├── context/         # AuthContext, CartContext, ToastContext
+        ├── hooks/           # useAuth, useCart, useForm, useToast, useProducts, useProductUtils
+        └── pages/           # Home, ProductList, ProductDetail, Cart, Login, Register, CrearProducto
+```
 
-### 1. Clonar el repositorio
+---
+
+## Instalación local
+
+Requiere Node.js y una base de datos MongoDB (local o Atlas).
 
 ```bash
-git clone https://github.com/Corcholog/Muebleria-Hermanos-Jota.git
+# Clonar el repositorio
+git clone https://github.com/matufalcon/Muebleria-Hermanos-Jota.git
 cd Muebleria-Hermanos-Jota
 ```
 
-### 2. Configurar Variables de Entorno
-
-**Backend**:
-Crea un archivo `.env` en `/backend` con las siguientes variables:
-```
-PORT=3001
-MONGODB_URI=mongodb+srv://USUARIO:PASSWORD@tu_cluster.mongodb.net/nombre_db
-JWT_SECRET=tu_secreto_super_seguro
-```
-
-**Frontend**:
-Crea un archivo `.env` en `/client` con la URL del API:
-```
-REACT_APP_API_URL=http://localhost:3001
-```
-
-### 3. Instalación de Dependencias
-
-**Backend**:
+**Backend**
 ```bash
 cd backend
 npm install
 ```
 
-**Frontend**:
+Creá un archivo `.env` en la carpeta `backend`:
+```
+PORT=3001
+MONGODB_URI=tu_uri_de_mongodb
+JWT_SECRET=tu_secreto_jwt
+```
+
+```bash
+npm run dev
+```
+
+**Frontend**
 ```bash
 cd client
 npm install
 ```
 
-### 4. Ejecución
+Creá un archivo `.env` en la carpeta `client`:
+```
+REACT_APP_API_URL=http://localhost:3001
+```
 
-- **Inicia el Servidor**:
-  ```bash
-  cd backend
-  npm run dev
-  ```
+```bash
+npm start
+```
 
-- **Inicia el Cliente**:
-  ```bash
-  cd client
-  npm start
-  ```
+La app queda disponible en `http://localhost:3000`.
+
+---
+
+## Proyecto original
+
+Refactor del trabajo grupal realizado en el curso de Full Stack. 
+El repositorio original está disponible en [Corcholog/Muebleria-Hermanos-Jota](https://github.com/Corcholog/Muebleria-Hermanos-Jota).
+
+---
+
+## Autor
+
+**Matías Leiva Falcón**  
+Analista Programador Universitario  
+[github.com/matufalcon](https://github.com/matufalcon)
